@@ -44,10 +44,31 @@ if (navigator.geolocation) {
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
 
-      L.marker(coords)
-        .addTo(map)
-        .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-        .openPopup();
+      // Adding an "event listener" to the map variable created (.on -> Leaflet Library)
+      // console.log(map);
+      map.on('click', function (mapEvent) {
+        // Whenever we click on the map, the 'mapEvent' will be sent to the function (getting the latitude and longitude)
+        // console.log(mapEvent);
+
+        // Getting the info from the click (by destructuring) into variables - lat and lng
+        const { lat, lng } = mapEvent.latlng;
+
+        // When we click, we set a marker to exactly the clicked lat and lng
+        // Creating an customizable popup to make it appear whenever the map is clicked -> Following the LEAFLET DOCUMNETATION
+        L.marker([lat, lng])
+          .addTo(map)
+          .bindPopup(
+            L.popup({
+              maxWidth: 250,
+              minWidth: 100,
+              autoClose: false,
+              closeOnClick: false,
+              className: 'running-popup',
+            })
+          )
+          .setPopupContent('Workout')
+          .openPopup();
+      });
     },
     function () {
       alert("Could not get user's position! 🚫");
