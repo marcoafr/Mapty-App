@@ -11,6 +11,56 @@ const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 
+// Creating the Workout class (Parent class for running and cycling)
+class Workout {
+  date = new Date();
+  id = (Date.now() + '').slice(-10); // Creating a 'random' id
+
+  constructor(coords, distance, duration) {
+    // this.date = ...
+    // this.id = ...
+    this.coords = coords; // [lat, lng]
+    this.distance = distance; // in km
+    this.duration = duration; // in minutes
+  }
+}
+
+// Running class -> Child of Workout
+class Running extends Workout {
+  constructor(coords, distance, duration, cadence) {
+    super(coords, distance, duration);
+    this.cadence = cadence;
+    this.calcPace();
+  }
+
+  calcPace() {
+    // min/km
+    this.pace = this.duration / this.distance;
+    return this.pace;
+  }
+}
+
+// Cycling class -> Child of Workout
+class Cycling extends Workout {
+  constructor(coords, distance, duration, elevationGain) {
+    super(coords, distance, duration);
+    this.elevationGain = elevationGain;
+    this.calcSpeed();
+  }
+
+  calcSpeed() {
+    // km/hour
+    this.speed = this.distance / (this.duration / 60);
+    return this.speed;
+  }
+}
+
+// Test -> creating new intances of the classes
+// const run1 = new Running([-22.3154, -49.0615], 5.2, 24, 178);
+// const ciclying1 = new Cycling([-22.3154, -49.0615], 27, 95, 523);
+// console.log(run1, ciclying1); // They work fine! 😁
+
+/////////////////////////////////////////// Application Architecture ///////////////////////////////////////
 // Creating the App class (app functionalities)
 class App {
   // Private instance properties
