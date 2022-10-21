@@ -99,8 +99,13 @@ class App {
   #workouts = [];
 
   constructor() {
-    // Starting the application itself as soon as the object is created
+    // Starting the application itself as soon as the object is created - Get user's position
     this._getPosition();
+
+    //Get data from local storage
+    this._getLocalStorage();
+
+    // Attach event handlers (below)
     form.addEventListener('submit', this._newWorkout.bind(this));
 
     // When we change from running to ciclyng, it should change from cadence to elevation
@@ -156,6 +161,13 @@ class App {
     // Adding an "event listener" to the map variable created (.on -> Leaflet Library)
     // console.log(map);
     this.#map.on('click', this._showForm.bind(this));
+
+    // We want to render each workout on the list:
+    this.#workouts.forEach(work => {
+      // Render each workout on side list:
+      this._renderWorkoutMarker(work);
+      // we must call _renderWorkoutMarker only when the map is loaded, that's why we render it on the _loadMap function
+    });
   }
 
   _showForm(mapE) {
@@ -254,6 +266,9 @@ class App {
 
     // Hide the form and clear the input fields
     this._hideForm();
+
+    // Set local storage to all workouts
+    this._setLocalStorage();
   }
 
   // Creating an auxiliar method to render workout marker
@@ -355,8 +370,44 @@ class App {
     });
 
     // Increasing the amount of clicks on the workout (just for demonstration)
-    workout.click();
+    // workout.click();
     // console.log(workout);
+  }
+
+  // Creating a method to store all the workouts on the local storage
+  _setLocalStorage() {
+    // localStorage.setItem(key-value-store, simple-value-string) // JSON.stringify() -> converts any object into a string
+    localStorage.setItem('workouts', JSON.stringify(this.#workouts));
+  }
+
+  // Creating a method to get all the workouts from the local storage
+  _getLocalStorage() {
+    // localStorage.getItem('name-of-the-key') // JSON.parse -> converts string to object
+    const data = JSON.parse(localStorage.getItem('workouts'));
+    // console.log(data);
+
+    // Check if there's any data
+    if (!data) return;
+
+    // If there is, we set #workouts to data
+    this.#workouts = data;
+
+    // We want to render each workout on the list:
+    this.#workouts.forEach(work => {
+      // Render each workout on side list:
+      this._renderWorkout(work);
+      //this._renderWorkoutMarker(work); // THIS DOESN'T WORK, because the map has not yet been loaded at the initialization
+
+      // we must call _renderWorkoutMarker only when the map is loaded, that's why we render it on the _loadMap function
+    });
+  }
+
+  // Creating a method to delete the
+  reset() {
+    // Removing data from localStorage
+    localStorage.removeItem('workouts');
+    // Reloading page
+    location.reload();
   }
 }
 
