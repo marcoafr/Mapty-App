@@ -89,6 +89,7 @@ const inputDistance = document.querySelector('.form__input--distance');
 const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
+const deleteAllButton = document.querySelector('.deleteAllButton');
 
 // Creating the App class (app functionalities)
 class App {
@@ -114,6 +115,9 @@ class App {
 
     // Creating an event handler to move map to workout, whenever clicked
     containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
+
+    // Deleting all workouts
+    deleteAllButton.addEventListener('click', this.reset);
   }
 
   _getPosition() {
