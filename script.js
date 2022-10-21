@@ -116,6 +116,9 @@ class App {
     // Creating an event handler to move map to workout, whenever clicked
     containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
 
+    // Creating an event handler to move map to workout, whenever clicked
+    containerWorkouts.addEventListener('click', this._deleteWorkout.bind(this));
+
     // Deleting all workouts
     deleteAllButton.addEventListener('click', this.reset);
   }
@@ -301,7 +304,7 @@ class App {
     // Creating an HTML (markup) and insert it into the DOM whenever there's a new workout
     let html = `
       <li class="workout workout--${workout.type}" data-id="${workout.id}">
-        <h2 class="workout__title">${workout.description}</h2>
+      <h2 class="workout__title">${workout.description}</h2>
           <div class="workout__details">
             <span class="workout__icon">${
               workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'
@@ -328,7 +331,11 @@ class App {
             <span class="workout__value">${workout.cadence}</span>
             <span class="workout__unit">spm</span>
           </div>
-        </li>`;
+        </li>
+        <div>
+        <button class="deleteButtonSmall deleteButtonRed deleteOneButton">⬆️Delete</button>
+      </div>
+        `;
     }
 
     if (workout.type === 'cycling') {
@@ -343,7 +350,10 @@ class App {
             <span class="workout__value">${workout.elevationGain}</span>
             <span class="workout__unit">m</span>
           </div>
-        </li>`;
+        </li>
+        <div>
+            <button class="deleteButtonSmall deleteButtonRed deleteOneButton">⬆️Delete</button>
+          </div>`;
     }
 
     // Insert the html into the DOM whenever there's a new workout (right after the form)
@@ -404,6 +414,38 @@ class App {
 
       // we must call _renderWorkoutMarker only when the map is loaded, that's why we render it on the _loadMap function
     });
+  }
+
+  // Creating a function to delete a workout
+
+  _deleteWorkout(e) {
+    // Getting info only if clicking the 'deleteButton'
+    const deleteButton = e.target.closest('.deleteOneButton');
+
+    // if null, return the function
+    if (!deleteButton) return;
+
+    // getting the workout info
+    const workoutEl =
+      deleteButton.previousSibling.parentElement.previousSibling
+        .previousSibling;
+
+    // We will then find the workout through its id (dataset, because it is data-id)
+    const workout = this.#workouts.find(
+      work => work.id === workoutEl.dataset.id
+    );
+    console.log(workout);
+
+    for (var i = 0; i < this.#workouts.length; i++) {
+      if (this.#workouts[i].id === workoutEl.dataset.id) {
+        this.#workouts.splice(i, 1);
+      }
+    }
+    //console.log(this.#workouts);
+    // localStorage.setItem(key-value-store, simple-value-string) // JSON.stringify() -> converts any object into a string
+    localStorage.setItem('workouts', JSON.stringify(this.#workouts));
+    // Reloading page
+    location.reload();
   }
 
   // Creating a method to delete the
