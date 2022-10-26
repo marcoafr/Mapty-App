@@ -124,7 +124,7 @@ a:visited {
   gap: 0.5rem 2.5rem;
 
   /* Match height and activity boxes */
-  height: 9.25rem;
+  height: 11.25rem;
   transition: all 0.5s, transform 1ms;
 }
 
@@ -151,6 +151,12 @@ a:visited {
   font-weight: 600;
 }
 
+.form__label--date {
+  flex: 0 0 23%;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
 .form__input {
   width: 100%;
   padding: 0.3rem 1.1rem;
@@ -165,6 +171,10 @@ a:visited {
 .form__input:focus {
   outline: none;
   background-color: #fff;
+}
+
+.dateInput {
+  grid-column: span 2;
 }
 
 .form__btn {
@@ -235,7 +245,7 @@ a:visited {
 
 .deleteButtonSmall {
   margin: auto;
-  width: 50%;
+  width: 99.99%;
   border: 3px solid green;
   padding: 10px;
   padding: 2px 10px;
